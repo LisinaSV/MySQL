@@ -1,14 +1,9 @@
 package test;
-
-import com.github.javafaker.Faker;
 import data.DataHelper;
 import data.SQLHelper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import page.LoginPage;
-
-
-import java.sql.DriverManager;
 
 import static com.codeborne.selenide.Selenide.open;
 import static data.SQLHelper.cleanAuthCodes;
@@ -32,33 +27,9 @@ public class BankLoginTest {
     @SneakyThrows
     void setUp() {
         loginPage = open("http://localhost:9999", LoginPage.class);
-        insertTestUsers();
+
     }
 
-    @SneakyThrows
-    private void insertTestUsers() {
-        var countSQL = "SELECT COUNT(*) FROM users;";
-        var cardsSQL = "SELECT id, number, balance_in_kopecks FROM cards WHERE user_id = ?;";
-
-        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
-             var countStmt = conn.createStatement();
-             var cardsStmt = conn.prepareStatement(cardsSQL)) {
-            try (var rs = countStmt.executeQuery(countSQL)) {
-                if (rs.next()) {
-                    var count = rs.getInt("COUNT(*)");
-                }
-            }
-            cardsStmt.setInt(1, 1);
-            try (var rs = cardsStmt.executeQuery()) {
-                while (rs.next()) {
-                    var id = rs.getInt("id");
-                    var number = rs.getString("number");
-                    var balanceInKopecks = rs.getInt("balance_in_kopecks");
-
-                }
-            }
-        }
-    }
 
 
     @Test
@@ -85,4 +56,5 @@ public class BankLoginTest {
         verificationPage.verify(verificationCode.getCode());
         verificationPage.verifyErrorNotification("Ошибка! \nНеверно указан код! Попробуйте ещё раз.");
     }
+
 }
