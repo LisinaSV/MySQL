@@ -1,4 +1,5 @@
 package test;
+import com.codeborne.selenide.Selenide;
 import data.DataHelper;
 import data.SQLHelper;
 import lombok.SneakyThrows;
@@ -21,13 +22,15 @@ public class BankLoginTest {
     @AfterEach
     void tearDown() {
         cleanAuthCodes();
+
     }
 
     @BeforeEach
     @SneakyThrows
     void setUp() {
         loginPage = open("http://localhost:9999", LoginPage.class);
-
+        Selenide.clearBrowserCookies();
+        Selenide.clearBrowserLocalStorage();
     }
 
 
@@ -56,5 +59,15 @@ public class BankLoginTest {
         verificationPage.verify(verificationCode.getCode());
         verificationPage.verifyErrorNotification("Ошибка! \nНеверно указан код! Попробуйте ещё раз.");
     }
+    @Test
+    @DisplayName("Should get error notification if login with exist user and wrong password")
+    void shouldGetErrorNotificationIfLoginWithExistUserAndWrongPassword() {
+        var wrongPassword = DataHelper.generateWrongPassword(); // метод, возвращающий заведомо неверный пароль
+        var wrongAuthInfo = new DataHelper.AuthInfo(authInfo.getLogin(), wrongPassword);
+
+        loginPage.loginWithInvalidCredentials(wrongAuthInfo);
+        loginPage.verifyErrorNotification("Ошибка! \nНеверно указан логин или пароль");
+    }
+
 
 }

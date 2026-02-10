@@ -6,7 +6,6 @@ CREATE TABLE users
     password VARCHAR(255)        NOT NULL,
     status   VARCHAR(255)        NOT NULL DEFAULT 'active'
 );
-
 DROP TABLE IF EXISTS cards;
 CREATE TABLE cards
 (

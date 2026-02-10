@@ -9,9 +9,10 @@ import lombok.Value;
 import java.util.Locale;
 
 public class DataHelper { // 10 usages
-    private static final Faker FAKER = new Faker(new Locale("en")); // 3 usages
+    private static final Faker FAKER = new Faker(new Locale("en"));
 
-    private DataHelper() { // no usages
+    private DataHelper() {
+
     }
 
     public static AuthInfo getAuthInfoWithTestData() {
@@ -26,21 +27,25 @@ public class DataHelper { // 10 usages
         return FAKER.internet().password();
     }
 
-    public static AuthInfo generateRandomUser() { // 1 usage
+    public static AuthInfo generateRandomUser() {
         return new AuthInfo(generateRandomLogin(), generateRandomPassword());
     }
 
-    public static VerificationCode generateRandomVerificationCode() { // 1 usage
+    public static VerificationCode generateRandomVerificationCode() {
         return new VerificationCode(FAKER.numerify("#######"));
     }
 
-    @Value // 7 usages
+    public static String generateWrongPassword() {
+        return "invalidPassword123!";
+    }
+
+    @Value
     public static class AuthInfo {
         String login;
         String password;
     }
 
-    @Data // 4 usages
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class VerificationCode {
